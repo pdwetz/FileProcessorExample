@@ -1,7 +1,7 @@
 ﻿/*
     FileProcessorExample - Simple example app for processing files with logging support
 
-    Copyright (c) 2014 Peter Wetzel
+    Copyright (c) 2016 Peter Wetzel
  
     The MIT License (MIT)
 
@@ -38,7 +38,8 @@ namespace FileProcessorExample
             try
             {
                 Console.ForegroundColor = ConsoleColor.White;
-                Console.WriteLine("FileProcessor   Copyright (C) 2014 Peter Wetzel");
+                Console.WriteLine("FileProcessor");
+                Console.WriteLine("Copyright (C) 2016 Peter Wetzel");
                 Console.WriteLine("This program comes with ABSOLUTELY NO WARRANTY; for details see license.txt.");
                 Console.WriteLine("Press any key to continue.");
                 Console.ReadLine();
@@ -62,7 +63,7 @@ namespace FileProcessorExample
                 return;
             }
 
-            var filepaths = Directory.EnumerateFiles(sFolderPath, "*.*", System.IO.SearchOption.TopDirectoryOnly);
+            var filepaths = Directory.EnumerateFiles(sFolderPath, "*.*", SearchOption.TopDirectoryOnly);
             foreach (var file in filepaths)
             {
                 Log("Processing file {0}", file);

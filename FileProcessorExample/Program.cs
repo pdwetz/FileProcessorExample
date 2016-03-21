@@ -1,7 +1,7 @@
 ﻿/*
     FileProcessorExample - Simple example app for processing files with logging support
 
-    Copyright (c) 2014 Peter Wetzel
+    Copyright (c) 2016 Peter Wetzel
  
     The MIT License (MIT)
 
