@@ -1,7 +1,7 @@
 ﻿/*
     FileProcessorExample - Simple example app for processing files with logging support
 
-    Copyright (c) 2016 Peter Wetzel
+    Copyright (c) 2017 Peter Wetzel
  
     The MIT License (MIT)
 
@@ -24,14 +24,20 @@
     THE SOFTWARE.
 */
 using System;
-using log4net;
 using System.IO;
+using Serilog;
 
 namespace FileProcessorExample
 {
     class FileProcessor
     {
-        private readonly ILog _log = LogManager.GetLogger(typeof(FileProcessor));
+        public FileProcessor()
+        {
+            Log.Logger = new LoggerConfiguration()
+               .MinimumLevel.Debug()
+               .WriteTo.Console()
+               .CreateLogger();
+        }
 
         public void StartConsole()
         {
@@ -39,7 +45,7 @@ namespace FileProcessorExample
             {
                 Console.ForegroundColor = ConsoleColor.White;
                 Console.WriteLine("FileProcessor");
-                Console.WriteLine("Copyright (C) 2016 Peter Wetzel");
+                Console.WriteLine("Copyright (C) 2017 Peter Wetzel");
                 Console.WriteLine("This program comes with ABSOLUTELY NO WARRANTY; for details see license.txt.");
                 Console.WriteLine("Press any key to continue.");
                 Console.ReadLine();
@@ -47,32 +53,26 @@ namespace FileProcessorExample
             }
             catch (Exception ex)
             {
-                _log.Error(null, ex);
+                Log.Error(ex, ex.Message);
             }
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("{0}: Done. Press any key to continue.", DateTime.Now.ToString("HH:mm:ss.fff"));
+            Console.WriteLine($"{DateTime.Now.ToString("HH: mm:ss.fff")}: Done. Press any key to continue.");
             Console.ReadLine();
         }
 
-        private void ProcessFiles(string sFolderPath)
+        private void ProcessFiles(string folderPath)
         {
-            Log("Processing folder {0}", sFolderPath);
-            if (!Directory.Exists(sFolderPath))
+            Log.Debug($"Processing folder {folderPath}");
+            if (!Directory.Exists(folderPath))
             {
-                Log("Skipping; folder does not exist: {0}", sFolderPath);
+                Log.Warning($"Skipping; folder does not exist: {folderPath}");
                 return;
             }
-
-            var filepaths = Directory.EnumerateFiles(sFolderPath, "*.*", SearchOption.TopDirectoryOnly);
-            foreach (var file in filepaths)
+            var filePaths = Directory.EnumerateFiles(folderPath, "*.*", SearchOption.TopDirectoryOnly);
+            foreach (var filePath in filePaths)
             {
-                Log("Processing file {0}", file);
+                Log.Debug($"Processing file {filePath}");
             }
-        }
-
-        public void Log(string format, params object[] arg)
-        {
-            _log.Info(string.Format(format, arg));
         }
     }
 }
