@@ -23,14 +23,45 @@
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
     THE SOFTWARE.
 */
+using CommandLine;
+using Serilog;
+using System;
+
 namespace FileProcessorExample
 {
     class Program
     {
         static void Main(string[] args)
         {
-            var p = new FileProcessor();
-            p.StartConsole();
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Information()
+                .WriteTo.Console()
+                .CreateLogger();
+
+            Parser.Default.ParseArguments<ProgramOptions>(args)
+                .WithParsed<ProgramOptions>(opts => RunOptionsAndReturnExitCode(opts));
+        }
+
+        private static void RunOptionsAndReturnExitCode(ProgramOptions options)
+        {
+            try
+            {
+                var p = new FileProcessor();
+                p.Process(options.FilePath);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, ex.Message);
+            }
+            finally
+            {
+                Log.CloseAndFlush();
+                if (options.PauseAtCompletion)
+                {
+                    Console.WriteLine("Press any key to continue.");
+                    Console.ReadLine();
+                }
+            }
         }
     }
 }
