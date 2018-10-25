@@ -23,55 +23,25 @@
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
     THE SOFTWARE.
 */
-using System;
-using System.IO;
 using Serilog;
+using System.IO;
 
 namespace FileProcessorExample
 {
-    class FileProcessor
+    public class FileProcessor
     {
-        public FileProcessor()
+        public void Process(string folderPath)
         {
-            Log.Logger = new LoggerConfiguration()
-               .MinimumLevel.Debug()
-               .WriteTo.Console()
-               .CreateLogger();
-        }
-
-        public void StartConsole()
-        {
-            try
-            {
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.WriteLine("FileProcessor");
-                Console.WriteLine("Copyright (C) 2017 Peter Wetzel");
-                Console.WriteLine("This program comes with ABSOLUTELY NO WARRANTY; for details see license.txt.");
-                Console.WriteLine("Press any key to continue.");
-                Console.ReadLine();
-                ProcessFiles(Environment.CurrentDirectory);
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex, ex.Message);
-            }
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine($"{DateTime.Now.ToString("HH: mm:ss.fff")}: Done. Press any key to continue.");
-            Console.ReadLine();
-        }
-
-        private void ProcessFiles(string folderPath)
-        {
-            Log.Debug($"Processing folder {folderPath}");
+            Log.Information($"Processing folder {folderPath}");
             if (!Directory.Exists(folderPath))
             {
-                Log.Warning($"Skipping; folder does not exist: {folderPath}");
+                Log.Warning($"Folder does not exist: {folderPath}");
                 return;
             }
             var filePaths = Directory.EnumerateFiles(folderPath, "*.*", SearchOption.TopDirectoryOnly);
             foreach (var filePath in filePaths)
             {
-                Log.Debug($"Processing file {filePath}");
+                Log.Information($"Processing file {filePath}");
             }
         }
     }
